@@ -1,22 +1,18 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth"
-import { getFirestore } from "firebase/firestore"
-import { getStorage } from "firebase/storage"
-
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBItqeTrwKWGAfjHTAsE0zIMyTf7jdhCW8",
-  authDomain: "alex-project12d.firebaseapp.com",
-  projectId: "alex-project12d",
-  storageBucket: "alex-project12d.appspot.com",
-  messagingSenderId: "830187763983",
-  appId: "1:830187763983:web:b36efb8f003034c7c3667a",
-  measurementId: "G-BE4MVG39WC"
+  apiKey: "AIzaSyAvWRCvwDzoXbeTtJ-4yE9FmN3QqRTSE6Y",
+  authDomain: "student-marketplace.firebaseapp.com",
+  projectId: "student-marketplace",
+  storageBucket: "student-marketplace.appspot.com",
+  messagingSenderId: "791550602443",
+  appId: "1:791550602443:web:92d339328c1f15e0ceff4e",
 };
-
-
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app)
-export const storage = getStorage(app)  
+export const db = getFirestore(app);
+export const storage = getStorage(app);

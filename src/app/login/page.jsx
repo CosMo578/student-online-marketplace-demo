@@ -16,7 +16,7 @@ import MyPasswordInput from "@/components/MyPasswordInput";
 import Link from "next/link";
 import Image from "next/image";
 
-const Login = async () => {
+const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -37,12 +37,6 @@ const Login = async () => {
       .required("Password is required"),
     rememberMe: Yup.boolean().optional(),
   });
-
-  const SignInWithPopUp = async () => {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-    router.push("/");
-  };
 
   const handleSubmit = async (values, actions) => {
     try {
@@ -73,30 +67,15 @@ const Login = async () => {
       >
         <Form className="flex flex-col gap-5 p-6 lg:mx-auto lg:w-[60%]">
           <h1 className="mb-6 text-center text-2xl">
-            Login to get access to all our amazing products
+            Dive Right back in - Continue shopping from where you left off
           </h1>
-
-          <button
-            onClick={SignInWithPopUp}
-            type="button"
-            className="flex w-full items-center justify-center rounded-lg border-2 px-6 py-3"
-          >
-            Login with Google
-            <Image
-              className="ms-4"
-              src="/svg/google.svg"
-              alt="google icon"
-              width={30}
-              height={30}
-            />
-          </button>
 
           <MyTextInput
             label="Email Address"
             name="email"
             id="email"
             type="email"
-            placeholder="tatemcrae88@gmail.com"
+            placeholder="raphaelakpor@gmail.com"
           />
 
           <MyPasswordInput
@@ -122,7 +101,7 @@ const Login = async () => {
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Submitting..." : "Submit"}
+            {isSubmitting ? "Signing you in..." : "Sign in"}
           </button>
           <p className="text-center">
             Don&apos;t have an account?{" "}

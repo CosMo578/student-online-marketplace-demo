@@ -1,0 +1,26 @@
+[debug] [2024-10-29T22:42:11.950Z] ----------------------------------------------------------------------
+[debug] [2024-10-29T22:42:11.952Z] Command:       /usr/local/share/nvm/versions/node/v20.17.0/bin/node /home/codespace/nvm/current/bin/firebase init
+[debug] [2024-10-29T22:42:11.952Z] CLI Version:   13.23.0
+[debug] [2024-10-29T22:42:11.952Z] Platform:      linux
+[debug] [2024-10-29T22:42:11.952Z] Node Version:  v20.17.0
+[debug] [2024-10-29T22:42:11.952Z] Time:          Tue Oct 29 2024 22:42:11 GMT+0000 (Coordinated Universal Time)
+[debug] [2024-10-29T22:42:11.952Z] Env Overrides: GITHUB_API_URL, GITHUB_API_URL
+[debug] [2024-10-29T22:42:11.952Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-29T22:42:11.956Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-29T22:42:11.956Z] > authorizing via signed-in user (raphaelakpor00@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /workspaces/student-online-marketplace-demo
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+

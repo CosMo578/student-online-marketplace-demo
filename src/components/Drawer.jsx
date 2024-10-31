@@ -64,15 +64,6 @@ export default function Drawer({ open, setOpen }) {
                           NGN {Intl.NumberFormat().format(totalVal)}
                         </span>
                       </h2>
-
-                      <Link href="/checkout">
-                        <button
-                          type="button"
-                          className="rounded-lg bg-primary px-4 py-2 text-center font-bold text-white"
-                        >
-                          Checkout <CreditCard className="ms-2 inline" />
-                        </button>
-                      </Link>
                     </div>
                   )}
                 </div>

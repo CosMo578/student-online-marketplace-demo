@@ -14,6 +14,11 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "img-prod-cms-rt-microsoft-com.akamaized.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "placeimg.com",
         pathname: "/**",
       },

@@ -3,8 +3,8 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-import MyCheckbox from "@/components/MyCheckbox";
 import MyTextInput from "@/components/MyTextInput";
+import MyRadioInput from "@/components/MyRadioInput";
 import MyPasswordInput from "@/components/MyPasswordInput";
 import Link from "next/link";
 import {
@@ -15,7 +15,7 @@ import {
 import { auth, db } from "../config/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+// import Image from "next/image";
 
 const Signup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,21 +23,25 @@ const Signup = () => {
   const provider = new GoogleAuthProvider();
 
   const initialValues = {
-    firstName: "",
-    lastName: "",
+    accountType: "",
+    userName: "",
+    matNum: "",
     email: "",
     password: "",
     confirmPassword: "",
-    acceptedTerms: false,
   };
 
   const schemaObject = Yup.object({
-    firstName: Yup.string()
+    accountType: Yup.string().required("Required"),
+    userName: Yup.string()
       .max(15, "Must be 15 characters or less")
       .required("Required"),
-    lastName: Yup.string()
-      .max(20, "Must be 20 characters or less")
-      .required("Required"),
+    matNum: Yup.string()
+      .matches(
+        /^M\.\d{2}\/(ND|HND)\/[A-Z]+\/\d{5}$/,
+        "Invalid matriculation number format",
+      )
+      .required("Matriculation number is required"),
     email: Yup.string().email("Invalid email address").required("Required"),
     password: Yup.string()
       .matches(
@@ -49,9 +53,6 @@ const Signup = () => {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .required("Please confirm your password"),
-    acceptedTerms: Yup.boolean()
-      .required("Required")
-      .oneOf([true], "You must accept the terms and conditions."),
   });
 
   const SignUpWithPopUp = async () => {
@@ -73,22 +74,32 @@ const Signup = () => {
 
   const handleSubmit = async (values, actions) => {
     setIsSubmitting((prev) => !prev);
-    const res = await createUserWithEmailAndPassword(
-      auth,
-      values.email,
-      values.password,
-    );
-    console.log(values.firstName);
-    console.log(values);
-    // Add a second document with a generated ID.
+    try {
+      console.log(values);
 
-    await addDoc(collection(db, "User_Detail"), {
-      Userid: res.user.uid,
-      First_Name: values.firstName,
-      Last_Name: values.lastName,
-      Email: values.email,
-    });
-    setIsSubmitting((prev) => !prev);
+      const res = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password,
+      );
+
+      await addDoc(collection(db, "Users"), {
+        userId: res.user.uid,
+        userName: values.userName,
+        matNum: values.matNum,
+        email: values.email,
+        accountType: values.accountType,
+      });
+
+      console.log("Sign up successful");
+      router.push("/login");
+    } catch (error) {
+      console.error("Error adding user to Firestore:", error);
+      alert("Signup failed. Please try again.");
+      
+    } finally {
+      setIsSubmitting((prev) => !prev);
+    }
   };
 
   return (
@@ -99,37 +110,41 @@ const Signup = () => {
         onSubmit={handleSubmit}
       >
         <Form className="flex flex-col gap-5 p-6 lg:mx-auto lg:w-[50%]">
-          <button
-            type="button"
-            onClick={SignUpWithPopUp}
-            className="flex w-full items-center justify-center rounded-lg border-2 px-6 py-3"
-          >
-            Sign Up with Google
-            <span className="m-0 ms-4 text-3xl leading-none">
-              <Image
-                src="/svg/google.svg"
-                alt="google icon"
-                width={30}
-                height={30}
+          <ul className="mb-8 grid w-full gap-6 md:grid-cols-2">
+            <li>
+              <MyRadioInput
+                label="Sign up as a Seller"
+                id="seller"
+                value="seller"
+                name="accountType"
               />
-            </span>
-          </button>
+            </li>
+
+            <li>
+              <MyRadioInput
+                label="Sign up as a Buyer"
+                id="buyer"
+                value="buyer"
+                name="accountType"
+              />
+            </li>
+          </ul>
+
           <div className="grid gap-6 md:grid-cols-2">
             <MyTextInput
-              label="First Name"
-              name="firstName"
-              id="firstName"
+              label="User Name"
+              name="userName"
+              id="userName"
               type="text"
-              placeholder="Tate"
-              focus
+              placeholder="Enter your username"
             />
 
             <MyTextInput
-              label="Last Name"
-              name="lastName"
-              id="lastName"
+              label="Mat. Number"
+              name="matNum"
+              id="matNum"
               type="text"
-              placeholder="McRae"
+              placeholder="M.21/ND/CSIT/14769"
             />
           </div>
 
@@ -155,16 +170,12 @@ const Signup = () => {
             placeholder="*********"
           />
 
-          <MyCheckbox name="acceptedTerms">
-            I accept the terms and conditions
-          </MyCheckbox>
-
           <button
             className="w-full rounded-lg bg-primary px-5 py-2.5 text-center text-sm font-bold text-white focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto"
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Submitting..." : "Submit"}
+            {isSubmitting ? "Creating Your Account..." : "SignUp"}
           </button>
           <p className="text-center">
             Already have an account?{" "}

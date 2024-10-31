@@ -38,18 +38,11 @@ const ProductDetails = () => {
               Add to Cart
             </button>
 
-            <button
-              type="button"
-              className="rounded-lg border-2 border-primary bg-transparent px-4 py-2 text-center font-bold text-primary"
-            >
-              Add to wishlist
-            </button>
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold">Product Description</h2>
+              <p>{product?.description}</p>
+            </div>
           </div>
-        </div>
-
-        <div className="mt-6 w-1/2">
-          <h2 className="text-xl font-semibold">Product Description</h2>
-          <p>{product?.description}</p>
         </div>
       </section>
       <Footer />

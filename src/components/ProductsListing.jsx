@@ -31,7 +31,7 @@ function ProductsListing() {
               <Link
                 href={`/products/${product?.title.replace(/\s+/g, "-").toLowerCase()}?id=${product?.id}`}
               >
-                <img
+                <Image
                   className="w-full object-cover"
                   src={product.images[0]}
                   alt="product image"

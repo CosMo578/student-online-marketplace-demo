@@ -37,7 +37,7 @@ const Header = () => {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <span className="self-center whitespace-nowrap text-2xl font-semibold">
-            StudCommerce
+            Student Online Marketplace
           </span>
         </Link>
 

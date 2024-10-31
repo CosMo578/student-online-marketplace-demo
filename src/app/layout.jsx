@@ -9,8 +9,9 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "E-Commerce",
-  description: "Buy all goods at cheaper rate",
+  title: "Student Marketplace",
+  description:
+    "An innovative marketplace for students to trade academic items and foster entreprenurial mindset",
 };
 
 export default function RootLayout({ children }) {

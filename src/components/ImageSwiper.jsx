@@ -7,6 +7,7 @@ import "swiper/css/thumbs";
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import Image from 'next/image';
 
 export default function ImageSwiper({ images }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -28,9 +29,12 @@ export default function ImageSwiper({ images }) {
         {images.map((image) => {
           return (
             <SwiperSlide key={image}>
-              <img
+              <Image
                 className="aspect-square h-auto max-h-[484px] w-full rounded-lg object-cover"
                 src={image}
+                alt='image'
+                width={600}
+                height={600}
               />
             </SwiperSlide>
           );
@@ -50,9 +54,12 @@ export default function ImageSwiper({ images }) {
         {images.map((image) => {
           return (
             <SwiperSlide key={image}>
-              <img
+              <Image
                 className="h-auto w-full cursor-pointer rounded-lg"
                 src={image}
+                alt='image'
+                width={600}
+                height={600}
               />
             </SwiperSlide>
           );
