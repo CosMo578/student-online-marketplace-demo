@@ -4,6 +4,7 @@ import Image from "next/image";
 import data from "/data.json";
 import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
 import { useEffect, useState } from "react";
+import { Bookmark } from 'lucide-react';
 
 function ProductsListing() {
   const products = data;
@@ -43,14 +44,14 @@ function ProductsListing() {
               <div className="flex flex-col p-4 pt-5">
                 <h2>{product?.title}</h2>
                 <p className="py-3 text-xl font-semibold">
-                  NGN {Intl.NumberFormat().format(product?.price)}
+                  ₦ {Intl.NumberFormat().format(product?.price)}
                 </p>
 
                 <button
                   onClick={() => increaseCartQty(product.id)}
-                  className="rounded-lg bg-primary p-4 font-semibold text-white"
+                  className="rounded-lg bg-primary p-4 flex items-center gap-2 justify-center font-semibold text-white"
                 >
-                  Add to Cart
+                  Add to WishList <Bookmark />
                 </button>
               </div>
             </div>

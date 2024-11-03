@@ -9,7 +9,7 @@ import {
 } from "@headlessui/react";
 import Link from "next/link";
 import { CartItem } from "./CartItem";
-import { CreditCard, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
 
 export default function Drawer({ open, setOpen }) {
@@ -46,7 +46,7 @@ export default function Drawer({ open, setOpen }) {
               <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                 <div className="px-4 sm:px-6">
                   <DialogTitle className="text-2xl font-semibold leading-6 text-gray-900">
-                    Cart
+                    Wishlist
                   </DialogTitle>
                 </div>
 
@@ -56,16 +56,6 @@ export default function Drawer({ open, setOpen }) {
                       return <CartItem key={item.id} {...item} />;
                     })}
                   </div>
-                  {totalVal !== 0 && (
-                    <div className="mt-4 flex items-center justify-between">
-                      <h2 className="text-2xl font-semibold">
-                        Total:{" "}
-                        <span className="ms-auto">
-                          NGN {Intl.NumberFormat().format(totalVal)}
-                        </span>
-                      </h2>
-                    </div>
-                  )}
                 </div>
               </div>
             </DialogPanel>

@@ -1,20 +1,13 @@
 "use client";
-
-import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import Link from "next/link";
 import { useState } from "react";
-import {
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-} from "firebase/auth";
+import { Formik, Form } from "formik";
 import { auth } from "../config/firebase";
 import { useRouter } from "next/navigation";
-import MyCheckbox from "@/components/MyCheckbox";
 import MyTextInput from "@/components/MyTextInput";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import MyPasswordInput from "@/components/MyPasswordInput";
-import Link from "next/link";
-import Image from "next/image";
 
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,24 +16,16 @@ const Login = () => {
   const initialValues = {
     email: "",
     password: "",
-    rememberMe: false,
   };
 
   const schemaObject = Yup.object({
     email: Yup.string().email("Invalid email address").required("Required"),
-    password: Yup.string()
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-        "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character",
-      )
-      .min(8, "Password must be at least 8 characters")
-      .required("Password is required"),
-    rememberMe: Yup.boolean().optional(),
+    password: Yup.string().required("Password is required"),
   });
 
-  const handleSubmit = async (values, actions) => {
+  const handleSubmit = async (values) => {
     try {
-      setIsSubmitting((prev) => !prev);
+      setIsSubmitting(true);
 
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -50,11 +35,13 @@ const Login = () => {
       const token = await userCredential.user.getIdToken();
       document.cookie = `token=${token}; path=/`;
 
-      router.push("/");
+      router.push("/products");
 
       console.log(auth.currentUser.uid);
     } catch (error) {
-      console.error("Login error:", error);
+      alert("Login error!! \n", error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -66,8 +53,8 @@ const Login = () => {
         onSubmit={handleSubmit}
       >
         <Form className="flex flex-col gap-5 p-6 lg:mx-auto lg:w-[60%]">
-          <h1 className="mb-6 text-center text-2xl">
-            Dive Right back in - Continue shopping from where you left off
+          <h1 className="mb-6 text-center text-2xl font-semibold">
+            Continue shopping from where you left. <br /> Dive Right back in.
           </h1>
 
           <MyTextInput
@@ -75,7 +62,7 @@ const Login = () => {
             name="email"
             id="email"
             type="email"
-            placeholder="raphaelakpor@gmail.com"
+            placeholder="raphaelakpor00@gmail.com"
           />
 
           <MyPasswordInput
@@ -85,23 +72,12 @@ const Login = () => {
             placeholder="*********"
           />
 
-          <div className="flex items-center justify-between accent-primary">
-            <MyCheckbox name="rememberMe">Remember me</MyCheckbox>
-
-            <Link
-              className="ms-2 font-medium text-primary hover:cursor-pointer hover:underline"
-              href="/forgot-password"
-            >
-              Forgot Password?
-            </Link>
-          </div>
-
           <button
-            className="w-full rounded-lg bg-primary px-5 py-2.5 text-center text-sm font-bold text-white focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto"
+            className="w-full rounded-lg bg-primary px-5 py-2.5 text-center text-sm font-bold text-white focus:outline-none focus:ring-4 sm:w-auto"
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Signing you in..." : "Sign in"}
+            {isSubmitting ? "Logging you in..." : "Login"}
           </button>
           <p className="text-center">
             Don&apos;t have an account?{" "}

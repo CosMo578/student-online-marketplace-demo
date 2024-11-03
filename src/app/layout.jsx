@@ -9,7 +9,7 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "Student Marketplace",
+  title: "Student MarketPlace",
   description:
     "An innovative marketplace for students to trade academic items and foster entreprenurial mindset",
 };

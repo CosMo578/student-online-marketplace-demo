@@ -1,10 +1,8 @@
 "use client";
-
-import { createContext, useContext, useState } from "react";
 import data from "/data.json";
+import { createContext, useContext, useState } from "react";
 
 const ShoppingCartContext = createContext({});
-
 export const useShoppingCart = () => {
   return useContext(ShoppingCartContext);
 };

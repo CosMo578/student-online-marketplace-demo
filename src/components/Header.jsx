@@ -4,18 +4,31 @@ import Drawer from "./Drawer";
 import Image from "next/image";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { auth } from "@/app/config/firebase";
 import { AuthContext } from "@/app/Context/AuthContext";
 import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { Heart, LogOut, LucideShoppingCart, Settings } from "lucide-react";
+import { Bookmark, Heart, LogOut, Settings } from "lucide-react";
+import { collection, getDocs } from "firebase/firestore";
 
 const Header = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const { searchParams, setSearchParams } = useShoppingCart();
+
+  // useEffect(() => {
+  //   const getAccountType = async () => {
+  //     const sellerQuery = query(
+  //       collection(db, "users"),
+  //       where("accountType", "==", "seller"),
+  //     );
+  //     const sellerDocs = await getDocs(sellerQuery);
+  //     console.log(sellerDocs);
+  //   };
+  //   getAccountType();
+  // }, []);
 
   const logout = async () => {
     try {
@@ -36,9 +49,10 @@ const Header = () => {
           href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          <span className="self-center whitespace-nowrap text-2xl font-semibold">
-            Student Online Marketplace
-          </span>
+          <Image src="/pti-logo.svg" alt="PTI logo" width={60} height={60} />
+          {/* <span className="self-center whitespace-nowrap text-2xl font-semibold">
+            Student MarketPlace
+          </span> */}
         </Link>
 
         <div className="flex gap-3 md:order-2 md:space-x-0 rtl:space-x-reverse">
@@ -49,7 +63,7 @@ const Header = () => {
                 onClick={() => setOpen((prev) => !prev)}
                 className="relative inline-flex items-center rounded-lg bg-neutral-200 p-3 text-center text-black"
               >
-                <LucideShoppingCart />
+                <Bookmark />
                 <span className="sr-only">Cart Quantity</span>
                 <div className="absolute -end-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-primary text-xs font-bold text-white">
                   {cartItems?.length}
@@ -63,10 +77,10 @@ const Header = () => {
           {currentUser ? (
             <Menu as="div" className="relative ml-3">
               <div>
-                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
-                  {currentUser?.photoURL && (
+                  {currentUser?.photoURL ? (
                     <Image
                       className="cursor-pointer rounded-full"
                       src={currentUser?.photoURL}
@@ -74,6 +88,10 @@ const Header = () => {
                       width={50}
                       height={50}
                     />
+                  ) : (
+                    <div className="cursor-pointer rounded-lg bg-primary px-6 py-3 font-semibold text-white">
+                      Open Menu
+                    </div>
                   )}
                 </MenuButton>
               </div>
@@ -84,16 +102,15 @@ const Header = () => {
                 {/* <MenuItem>
                     <a
                       href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                     >
                       Your Profile
                     </a>
                   </MenuItem> */}
-
                 <MenuItem>
                   <Link
                     href="/settings"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                   >
                     <Settings className="me-2 inline size-4" />
                     Settings
@@ -103,15 +120,17 @@ const Header = () => {
                 <MenuItem>
                   <Link
                     href="/favourites"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                   >
-                    <Heart className="me-2 inline size-4" /> Favourites
+                    <Heart className="me-2 inline size-4" /> 
+                    Dashboard
                   </Link>
                 </MenuItem>
+
                 <MenuItem>
                   <span
                     onClick={() => logout()}
-                    className="block cursor-pointer px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                    className="flex items-center cursor-pointer px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                   >
                     <LogOut className="me-2 inline size-4" /> Sign out
                   </span>
@@ -130,14 +149,14 @@ const Header = () => {
           )}
         </div>
 
-        <form className="relative rounded-lg border border-gray-300 bg-gray-50 pr-10 ps-10">
+        <form className="relative overflow-hidden rounded-lg border border-gray-300 bg-gray-50 ps-10">
           <label
             htmlFor="default-search"
             className="sr-only mb-2 text-sm font-medium text-gray-900"
           >
             Search
           </label>
-          <div className="">
+          <div className="overflow-hidden">
             <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
               <svg
                 className="h-4 w-4 text-gray-500 dark:text-gray-400"
@@ -159,19 +178,12 @@ const Header = () => {
             <input
               type="search"
               id="default-search"
-              className="me-12 block p-4 text-gray-900 outline-none focus:outline-none"
+              className="block border-0 p-4 text-gray-900"
               placeholder="Search Anything..."
               value={searchParams}
               onChange={(e) => setSearchParams(e.target.value)}
               required
             />
-
-            <button
-              type="submit"
-              className="absolute bottom-2.5 end-2.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white"
-            >
-              Search
-            </button>
           </div>
         </form>
       </div>

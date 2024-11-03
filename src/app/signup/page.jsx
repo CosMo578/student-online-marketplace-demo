@@ -1,26 +1,19 @@
 "use client";
-
-import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import Link from "next/link";
 import { useState } from "react";
+import { Formik, Form } from "formik";
+import { useRouter } from "next/navigation";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../config/firebase.js";
 import MyTextInput from "@/components/MyTextInput";
 import MyRadioInput from "@/components/MyRadioInput";
 import MyPasswordInput from "@/components/MyPasswordInput";
-import Link from "next/link";
-import {
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from "firebase/auth";
-import { auth, db } from "../config/firebase";
-import { addDoc, collection } from "firebase/firestore";
-import { useRouter } from "next/navigation";
-// import Image from "next/image";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Signup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
-  const provider = new GoogleAuthProvider();
 
   const initialValues = {
     accountType: "",
@@ -55,50 +48,29 @@ const Signup = () => {
       .required("Please confirm your password"),
   });
 
-  const SignUpWithPopUp = async () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        router.push("/");
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-      });
-  };
-
   const handleSubmit = async (values, actions) => {
-    setIsSubmitting((prev) => !prev);
+    setIsSubmitting(true);
     try {
-      console.log(values);
-
-      const res = await createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         values.email,
         values.password,
       );
 
-      await addDoc(collection(db, "Users"), {
-        userId: res.user.uid,
+      const userId = userCredential.user.uid;
+      await setDoc(doc(db, "users", userId), {
         userName: values.userName,
         matNum: values.matNum,
         email: values.email,
         accountType: values.accountType,
       });
 
-      console.log("Sign up successful");
+      alert("Sign up successful");
       router.push("/login");
     } catch (error) {
-      console.error("Error adding user to Firestore:", error);
-      alert("Signup failed. Please try again.");
-      
+      alert("Signup failed " + error.message);
     } finally {
-      setIsSubmitting((prev) => !prev);
+      setIsSubmitting(false);
     }
   };
 
@@ -153,7 +125,7 @@ const Signup = () => {
             name="email"
             id="email"
             type="email"
-            placeholder="tatemcrae88@gmail.com"
+            placeholder="raphaelakpor00@gmail.com"
           />
 
           <MyPasswordInput
