@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.1.9",
-    "@stripe/react-stripe-js": "^2.8.1",
-    "@stripe/stripe-js": "^4.7.0",
     "axios": "^1.7.7",
     "firebase": "^10.12.4",
     "firebase-admin": "^12.6.0",
@@ -24,7 +22,6 @@
     "react-dom": "^18",
     "react-router-dom": "^6.26.1",
     "stream-browserify": "^3.0.0",
-    "stripe": "^17.1.0",
     "swiper": "^11.1.14",
     "webpack": "^5.95.0",
     "yup": "^1.4.0"

@@ -5,36 +5,47 @@ import Image from "next/image";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { auth } from "@/app/config/firebase";
+import { auth, db } from "@/app/config/firebase";
 import { AuthContext } from "@/app/Context/AuthContext";
 import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { Bookmark, Heart, LogOut, Settings } from "lucide-react";
-import { collection, getDocs } from "firebase/firestore";
+import { Bookmark, LayoutDashboard, LogOut } from "lucide-react";
+import { doc, getDoc } from "firebase/firestore";
 
 const Header = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [accountType, setAccountType] = useState("");
   const { currentUser } = useContext(AuthContext);
   const { searchParams, setSearchParams } = useShoppingCart();
 
-  // useEffect(() => {
-  //   const getAccountType = async () => {
-  //     const sellerQuery = query(
-  //       collection(db, "users"),
-  //       where("accountType", "==", "seller"),
-  //     );
-  //     const sellerDocs = await getDocs(sellerQuery);
-  //     console.log(sellerDocs);
-  //   };
-  //   getAccountType();
-  // }, []);
+  useEffect(() => {
+    async function getUserByUid() {
+      try {
+        const userId = await currentUser?.uid;
+        const userRef = doc(db, "users", userId);
+
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          const accountType = userSnap.data().accountType;
+          setAccountType(accountType);
+        } else {
+          console.log("No such user found!");
+          return null;
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    }
+    getUserByUid();
+  });
 
   const logout = async () => {
     try {
       signOut(auth);
       document.cookie = "token=; Max-Age=0; path=/"; // Clear token
-      router.push("/login"); // Redirect to login
+      router.push("/"); // Redirect to login
     } catch (error) {
       console.log(error);
     }
@@ -50,9 +61,6 @@ const Header = () => {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <Image src="/pti-logo.svg" alt="PTI logo" width={60} height={60} />
-          {/* <span className="self-center whitespace-nowrap text-2xl font-semibold">
-            Student MarketPlace
-          </span> */}
         </Link>
 
         <div className="flex gap-3 md:order-2 md:space-x-0 rtl:space-x-reverse">
@@ -89,9 +97,13 @@ const Header = () => {
                       height={50}
                     />
                   ) : (
-                    <div className="cursor-pointer rounded-lg bg-primary px-6 py-3 font-semibold text-white">
-                      Open Menu
-                    </div>
+                    <Image
+                      className="cursor-pointer rounded-full"
+                      src="/user-dummy.png"
+                      alt="user photo"
+                      width={50}
+                      height={50}
+                    />
                   )}
                 </MenuButton>
               </div>
@@ -99,38 +111,21 @@ const Header = () => {
                 transition
                 className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
-                {/* <MenuItem>
-                    <a
-                      href="#"
+                {accountType === "seller" && (
+                  <MenuItem>
+                    <Link
+                      href="/seller-dashboard/create-product"
                       className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                     >
-                      Your Profile
-                    </a>
-                  </MenuItem> */}
-                <MenuItem>
-                  <Link
-                    href="/settings"
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
-                  >
-                    <Settings className="me-2 inline size-4" />
-                    Settings
-                  </Link>
-                </MenuItem>
-
-                <MenuItem>
-                  <Link
-                    href="/favourites"
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
-                  >
-                    <Heart className="me-2 inline size-4" /> 
-                    Dashboard
-                  </Link>
-                </MenuItem>
-
+                      <LayoutDashboard className="me-2 inline size-4" />
+                      Manage Products
+                    </Link>
+                  </MenuItem>
+                )}
                 <MenuItem>
                   <span
                     onClick={() => logout()}
-                    className="flex items-center cursor-pointer px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                    className="flex cursor-pointer items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                   >
                     <LogOut className="me-2 inline size-4" /> Sign out
                   </span>
