@@ -55,7 +55,7 @@ const Header = () => {
 
   return (
     <nav className="z-20 w-full border-b border-gray-200 bg-white">
-      <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
+      <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between gap-4 p-4">
         <Link
           href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
@@ -112,15 +112,27 @@ const Header = () => {
                 className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 {accountType === "seller" && (
-                  <MenuItem>
-                    <Link
-                      href="/seller-dashboard/create-product"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
-                    >
-                      <LayoutDashboard className="me-2 inline size-4" />
-                      Manage Products
-                    </Link>
-                  </MenuItem>
+                  <>
+                    <MenuItem>
+                      <Link
+                        href="/seller/my-products"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      >
+                        <LayoutDashboard className="me-2 inline size-4" />
+                        My Products
+                      </Link>
+                    </MenuItem>
+
+                    <MenuItem>
+                      <Link
+                        href="/seller/create-product"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      >
+                        <LayoutDashboard className="me-2 inline size-4" />
+                        Create Product
+                      </Link>
+                    </MenuItem>
+                  </>
                 )}
                 <MenuItem>
                   <span

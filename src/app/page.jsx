@@ -16,7 +16,7 @@ const Header = () => {
                 width={60}
                 height={32}
               />
-              <h1 className="text-2xl font-semibold text-primary">
+              <h1 className="text-2xl hidden lg:block font-semibold text-primary">
                 Student MarketPlace
               </h1>
             </a>

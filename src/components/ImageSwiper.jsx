@@ -13,7 +13,7 @@ export default function ImageSwiper({ images }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   return (
-    <div className="w-[60%]">
+    <div className="lg:w-[60%] w-full">
       <Swiper
         style={{
           "--swiper-navigation-color": "#fff",
@@ -26,7 +26,7 @@ export default function ImageSwiper({ images }) {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper2"
       >
-        {images.map((image) => {
+        {images?.map((image) => {
           return (
             <SwiperSlide key={image}>
               <Image
@@ -51,7 +51,7 @@ export default function ImageSwiper({ images }) {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper mt-8"
       >
-        {images.map((image) => {
+        {images?.map((image) => {
           return (
             <SwiperSlide key={image}>
               <Image

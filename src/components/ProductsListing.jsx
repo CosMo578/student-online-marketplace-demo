@@ -2,12 +2,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import data from "/data.json";
+import { db } from "@/app/config/firebase";
+import { getDocs, collection } from "firebase/firestore";
 import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
 import { useEffect, useState } from "react";
 import { Bookmark } from 'lucide-react';
 
 function ProductsListing() {
   const products = data;
+  const [prod, setProd] = useState([])
   const [sortedProducts, setSortedProducts] = useState([]);
   const { increaseCartQty, searchParams } = useShoppingCart();
 
@@ -20,11 +23,18 @@ function ProductsListing() {
     setSortedProducts(filteredItems);
   }, [searchParams, products]);
 
+    const getProd = async () => {
+      const ref = collection(db, "products");
+      const data = await getDocs(ref);
+      const fildata = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setProd(fildata);
+    };
+    getProd();
+
   return (
-    <div className="grid grid-cols-2 gap-5 px-5 pt-10 lg:grid-cols-4 lg:px-20">
+    <div className="grid md:grid-cols-2 gap-5 px-5 pt-10 lg:grid-cols-4 lg:px-20">
       {sortedProducts?.map((product, index) => {
         return (
-          index > 1 && (
             <div
               key={product?.id}
               className="overflow-hidden rounded-lg bg-gray-200 shadow"
@@ -34,7 +44,7 @@ function ProductsListing() {
               >
                 <Image
                   className="w-full object-cover"
-                  src={product.images[0]}
+                  src={product?.images[0]}
                   alt="product image"
                   width="640"
                   height="640"
@@ -56,7 +66,6 @@ function ProductsListing() {
               </div>
             </div>
           )
-        );
       })}
     </div>
   );

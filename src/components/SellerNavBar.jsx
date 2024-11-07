@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const SellerNavBar = () => {
@@ -57,17 +57,23 @@ const SellerNavBar = () => {
       >
         <div className="h-full overflow-y-auto bg-white px-3 pb-4">
           <ul className="flex flex-col gap-5 font-medium">
-            <Link href="/seller-dashboard">
+            <Link href="/products">
+              <li className="group flex items-center gap-4 rounded-lg bg-neutral-100 p-5 text-neutral-600">
+                Back to Dashboard
+              </li>
+            </Link>
+
+            <Link href="/seller/my-products">
               <li
-                className={`${pathname == "/seller-dashboard" ? "bg-primary text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
+                className={`${pathname == "/seller/my-products" ? "bg-primary text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
               >
                 Products
               </li>
             </Link>
 
-            <Link href="/seller-dashboard/create-product">
+            <Link href="/seller/create-product">
               <li
-                className={`${pathname == "/seller-dashboard/create-product" ? "bg-primary text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
+                className={`${pathname == "/seller/create-product" ? "bg-primary text-white" : "bg-neutral-100 text-neutral-600"} group flex items-center gap-4 rounded-lg p-5`}
               >
                 Create Products
               </li>

@@ -71,7 +71,7 @@ const UploadProducts = () => {
     <section>
       <form
         onSubmit={handleProductCreation}
-        className="mx-auto flex max-w-[60%] flex-col items-center space-y-4 pb-8 pt-20"
+        className="mx-auto flex lg:max-w-[60%] px-4 flex-col items-center space-y-4 pb-8 pt-20"
       >
         <div className="w-full">
           <label

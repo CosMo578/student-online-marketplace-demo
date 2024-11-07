@@ -125,7 +125,7 @@ const Signup = () => {
             name="email"
             id="email"
             type="email"
-            placeholder="raphaelakpor00@gmail.com"
+            placeholder="tonystark@gmail.com"
           />
 
           <MyPasswordInput

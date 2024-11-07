@@ -20,16 +20,16 @@ export function CartItem({ id, quantity }) {
       >
         <div className="flex items-center gap-4">
           <Image
-            className="h-full"
+            className="h-full max-md:w-[40%]"
             src={item.images[0]}
             alt="item image"
             width={170}
             height={95}
           />
 
-          <div>
-            <h2 className="text-xl font-semibold">{item.title}</h2>
-            <p className="mt-2 text-xl">
+          <div className='p-2'>
+            <h2 className="lg:text-xl font-semibold">{item.title}</h2>
+            <p className="mt-2 lg:text-xl">
               ₦ {Intl.NumberFormat().format(item?.price)}
             </p>
           </div>

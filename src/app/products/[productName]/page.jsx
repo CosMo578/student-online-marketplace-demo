@@ -23,12 +23,14 @@ const ProductDetails = () => {
       <Header />
 
       <section className="my-8 px-5 lg:px-20">
-        <div className="flex items-start gap-8">
+        <div className="flex flex-col items-start gap-8">
           <ImageSwiper images={product?.images} />
 
-          <div className="flex w-[40%] flex-col gap-8 pt-16">
+          <div className="flex flex-col gap-8 pt-16 lg:w-[40%]">
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold">{product?.title}</h2>
+              <h2 className="text-xl font-semibold lg:text-2xl lg:font-bold">
+                {product?.title}
+              </h2>
 
               <p className="text-xl">
                 NGN {Intl.NumberFormat().format(product?.price)}
@@ -48,14 +50,14 @@ const ProductDetails = () => {
               <p>{product?.description}</p>
             </div>
 
-            <div className="flex items-stretch justify-between">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col items-center gap-3 justify-between lg:items-stretch">
+              <div className="flex flex-col items-center gap-3 lg:flex-row">
                 <Image
                   className="cursor-pointer rounded-full"
                   src="/user-dummy.png"
                   alt="user photo"
-                  width={60}
-                  height={60}
+                  width={70}
+                  height={70}
                 />
                 {/* <div className="size-14 rounded-full bg-red-500"></div> */}
                 <div>
