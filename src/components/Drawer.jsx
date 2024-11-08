@@ -12,7 +12,7 @@ import { XIcon } from "lucide-react";
 import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
 
 export default function Drawer({ open, setOpen }) {
-  const { cartItems, totalVal } = useShoppingCart();
+  const { savedItems } = useShoppingCart();
 
   return (
     <Dialog open={open} onClose={setOpen} className="relative z-10">
@@ -26,7 +26,7 @@ export default function Drawer({ open, setOpen }) {
           <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
             <DialogPanel
               transition
-              className="pointer-events-auto relative w-screen lg:max-w-[40vw] transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700"
+              className="pointer-events-auto relative w-screen transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700 lg:max-w-[40vw]"
             >
               <TransitionChild>
                 <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 duration-500 ease-in-out data-[closed]:opacity-0 sm:-ml-10 sm:pr-4">
@@ -51,8 +51,8 @@ export default function Drawer({ open, setOpen }) {
 
                 <div className="relative mt-6 flex-1 px-4 sm:px-6">
                   <div className="flex flex-col gap-4">
-                    {cartItems.map((item) => {
-                      return <CartItem key={item.id} {...item} />;
+                    {savedItems.map((id, index) => {
+                      return <CartItem key={index} id={id} />;
                     })}
                   </div>
                 </div>

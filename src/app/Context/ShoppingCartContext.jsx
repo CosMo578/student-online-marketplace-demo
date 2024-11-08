@@ -1,6 +1,5 @@
 "use client";
-import data from "/data.json";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const ShoppingCartContext = createContext({});
 export const useShoppingCart = () => {
@@ -8,70 +7,40 @@ export const useShoppingCart = () => {
 };
 
 export const ShoppingCartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const [savedItems, setSavedItems] = useState([]);
   const [searchParams, setSearchParams] = useState("");
 
-  const cartQty = cartItems?.reduce((qty, item) => {
-    item.qty + qty;
-  }, 0);
+  // Load saved items from localStorage on initial render
+  useEffect(() => {
+    const storedItems = localStorage.getItem("wishList");
+    if (storedItems) {
+      setSavedItems(JSON.parse(storedItems));
+    }
+  }, []);
 
-  const totalVal = cartItems.reduce((total, cartItem) => {
-    const item = data.find((i) => i.id === cartItem.id);
-    return total + (item?.price || 0) * cartItem.quantity;
-  }, 0);
-
-  function getItemsQty(id) {
-    return cartItems.find((item) => item.id === id)?.quantity || 0;
+  function addSavedItem(id) {
+    // Check if the item already exists in savedItems
+    if (!savedItems.includes(id)) {
+      const newSavedItems = [...savedItems, id];
+      setSavedItems(newSavedItems);
+      localStorage.setItem("wishList", JSON.stringify(newSavedItems));
+    } else {
+      alert(`Item is already in your wishlist.`);
+    }
   }
 
-  function increaseCartQty(id) {
-    setCartItems((currItems) => {
-      if (currItems.find((item) => item.id === id) == null) {
-        return [...currItems, { id, quantity: 1 }];
-      } else {
-        return currItems.map((item) => {
-          if (item.id == id) {
-            return { ...item, quantity: item.quantity + 1 };
-          } else {
-            return item;
-          }
-        });
-      }
-    });
-  }
-
-  function decreaseCartQty(id) {
-    setCartItems((currItems) => {
-      if (currItems.find((item) => item.id === id)?.quantity === 1) {
-        return currItems.filter((item) => item.id !== id);
-      } else {
-        return currItems.map((item) => {
-          if (item.id === id) {
-            return { ...item, quantity: item.quantity - 1 };
-          } else {
-            return item;
-          }
-        });
-      }
-    });
-  }
-
-  function removeFromCart(id) {
-    setCartItems((currItems) => {
-      return currItems.filter((item) => item.id !== id);
-    });
+  function removeSavedItem(id) {
+    const updatedSavedItems = savedItems.filter((item) => item !== id);
+    setSavedItems(updatedSavedItems);
+    localStorage.setItem("wishList", JSON.stringify(updatedSavedItems));
   }
 
   return (
     <ShoppingCartContext.Provider
       value={{
-        getItemsQty,
-        increaseCartQty,
-        decreaseCartQty,
-        removeFromCart,
-        cartItems,
-        cartQty,
-        totalVal,
+        addSavedItem,
+        removeSavedItem,
+        savedItems,
         searchParams,
         setSearchParams,
       }}

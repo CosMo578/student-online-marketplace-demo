@@ -2,22 +2,29 @@
 import Link from "next/link";
 import Drawer from "./Drawer";
 import Image from "next/image";
-import { signOut } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { auth, db } from "@/app/config/firebase";
 import { AuthContext } from "@/app/Context/AuthContext";
 import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { Bookmark, LayoutDashboard, LogOut } from "lucide-react";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  Bookmark,
+  LayoutDashboard,
+  ListCollapse,
+  LogOut,
+  MessageCircleMore,
+} from "lucide-react";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 const Header = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [accountType, setAccountType] = useState("");
   const { currentUser } = useContext(AuthContext);
-  const { searchParams, setSearchParams } = useShoppingCart();
+  const { savedItems, searchParams, setSearchParams } = useShoppingCart();
+  const userId = auth.currentUser.uid;
 
   useEffect(() => {
     async function getUserByUid() {
@@ -51,7 +58,17 @@ const Header = () => {
     }
   };
 
-  const { cartItems } = useShoppingCart();
+  const storeContactInfo = async () => {
+    const contactUrl = prompt("Enter your WhatsApp/WhatsApp Business link");
+    if (!contactUrl.includes("https://wa.me/")) {
+      alert("Invalid WhatsApp link");
+      return;
+    } else {
+      const docRef = await doc(db, "users", userId);
+      await updateDoc(docRef, { businessLink: contactUrl });
+      alert("Successfully updated WhatsApp Link");
+    }
+  };
 
   return (
     <nav className="z-20 w-full border-b border-gray-200 bg-white">
@@ -65,51 +82,48 @@ const Header = () => {
 
         <div className="flex gap-3 md:order-2 md:space-x-0 rtl:space-x-reverse">
           <div className="flex gap-4">
-            {cartItems?.length !== 0 && (
-              <button
-                type="button"
-                onClick={() => setOpen((prev) => !prev)}
-                className="relative inline-flex items-center rounded-lg bg-neutral-200 p-3 text-center text-black"
-              >
-                <Bookmark />
-                <span className="sr-only">Cart Quantity</span>
-                <div className="absolute -end-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-primary text-xs font-bold text-white">
-                  {cartItems?.length}
-                </div>
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="relative inline-flex items-center rounded-lg bg-neutral-200 p-3 text-center text-black"
+            >
+              <Bookmark />
+              <span className="sr-only">Cart Quantity</span>
+              <div className="absolute -end-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-primary text-xs font-bold text-white">
+                {savedItems?.length}
+              </div>
+            </button>
 
             <Drawer open={open} setOpen={setOpen} />
           </div>
 
           {currentUser ? (
             <Menu as="div" className="relative ml-3">
-              <div>
-                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm">
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Open user menu</span>
-                  {currentUser?.photoURL ? (
-                    <Image
-                      className="cursor-pointer rounded-full"
-                      src={currentUser?.photoURL}
-                      alt="user photo"
-                      width={50}
-                      height={50}
-                    />
-                  ) : (
-                    <Image
-                      className="cursor-pointer rounded-full"
-                      src="/user-dummy.png"
-                      alt="user photo"
-                      width={50}
-                      height={50}
-                    />
-                  )}
-                </MenuButton>
-              </div>
+              <MenuButton className="relative flex rounded-full bg-gray-800 text-sm">
+                <span className="absolute -inset-1.5" />
+                <span className="sr-only">Open user menu</span>
+                {currentUser?.photoURL ? (
+                  <Image
+                    className="cursor-pointer rounded-full"
+                    src={currentUser?.photoURL}
+                    alt="user photo"
+                    width={50}
+                    height={50}
+                  />
+                ) : (
+                  <Image
+                    className="cursor-pointer rounded-full"
+                    src="/user-dummy.png"
+                    alt="user photo"
+                    width={50}
+                    height={50}
+                  />
+                )}
+              </MenuButton>
+
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 {accountType === "seller" && (
                   <>
@@ -118,7 +132,7 @@ const Header = () => {
                         href="/seller/my-products"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                       >
-                        <LayoutDashboard className="me-2 inline size-4" />
+                        <ListCollapse className="me-2 inline size-4" />
                         My Products
                       </Link>
                     </MenuItem>
@@ -132,8 +146,19 @@ const Header = () => {
                         Create Product
                       </Link>
                     </MenuItem>
+
+                    <MenuItem>
+                      <div
+                        onClick={storeContactInfo}
+                        className="flex cursor-pointer items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      >
+                        <MessageCircleMore className="me-2 inline size-4" />
+                        Update Contact Info
+                      </div>
+                    </MenuItem>
                   </>
                 )}
+
                 <MenuItem>
                   <span
                     onClick={() => logout()}
@@ -156,15 +181,29 @@ const Header = () => {
           )}
         </div>
 
-        <form className="relative overflow-hidden rounded-lg border border-gray-300 bg-gray-50 ps-10">
-          <label
-            htmlFor="default-search"
-            className="sr-only mb-2 text-sm font-medium text-gray-900"
+        <form className="relative flex items-stretch gap-3 overflow-hidden rounded-lg border border-gray-300 bg-gray-50 pe-10">
+          <select
+            name="category"
+            id="category"
+            className="w-[40%] cursor-pointer rounded-lg text-sm"
           >
-            Search
-          </label>
-          <div className="overflow-hidden">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
+            <option value="all">Filter by Category</option>
+            <option value="clothes">Clothes</option>
+            <option value="electronics">Electronics</option>
+            <option value="kitchenUtensils">Kitchen Utensils</option>
+            <option value="furniture">Furniture</option>
+            <option value="miscellaneous">Miscellaneous</option>
+          </select>
+
+          <div className="w-[60%] overflow-hidden">
+            <label
+              htmlFor="default-search"
+              className="sr-only mb-2 text-sm font-medium text-gray-900"
+            >
+              Search
+            </label>
+
+            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3">
               <svg
                 className="h-4 w-4 text-gray-500 dark:text-gray-400"
                 aria-hidden="true"
@@ -186,7 +225,7 @@ const Header = () => {
               type="search"
               id="default-search"
               className="block border-0 p-4 text-gray-900"
-              placeholder="Search Anything..."
+              placeholder="Search for products by name..."
               value={searchParams}
               onChange={(e) => setSearchParams(e.target.value)}
               required

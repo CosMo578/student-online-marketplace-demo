@@ -13,7 +13,8 @@ export default function ImageSwiper({ images }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   return (
-    <div className="lg:w-[60%] w-full">
+    // className="lg:w-[60%] w-full"
+    <div >
       <Swiper
         style={{
           "--swiper-navigation-color": "#fff",

@@ -7,14 +7,15 @@ import ChatModal from "@/components/ChatModal";
 import ImageSwiper from "@/components/ImageSwiper";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Bookmark } from 'lucide-react';
-import Image from 'next/image';
+import { Bookmark, LucideArrowLeft } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 const ProductDetails = () => {
   const searchParams = useSearchParams();
   const [openModal, setOpenModal] = useState(false);
   const productId = searchParams.get("id");
-  const { increaseCartQty } = useShoppingCart();
+  const { addSavedItem } = useShoppingCart();
 
   let product = data.find((product) => product.id == productId);
 
@@ -23,8 +24,35 @@ const ProductDetails = () => {
       <Header />
 
       <section className="my-8 px-5 lg:px-20">
-        <div className="flex flex-col items-start gap-8">
-          <ImageSwiper images={product?.images} />
+        <div className="flex flex-col items-start gap-8 lg:flex-row">
+          <div className="w-full lg:w-[60%]">
+            <Link
+              className="mb-4 flex items-center w-fit gap-2 rounded-lg bg-primary px-4 py-2 text-white"
+              href="/products"
+            >
+              <LucideArrowLeft />
+              Back
+            </Link>
+
+            <ImageSwiper images={product?.images} />
+
+            <section className="mt-6 space-y-2">
+              <h2 className="font-semibold lg:text-2xl">Ratings</h2>
+
+              <div>
+                {/* !TODO */}
+                {/* Fetch ratings from database */}
+                <p>There are no ratings for this product yet </p>
+              </div>
+            </section>
+
+            <div className="mt-4 flex items-center gap-4">
+              <h2>Purchased this product yet?</h2>
+              <p className="w-fit rounded-lg bg-primary px-4 py-2 text-white">
+                Leave a rating
+              </p>
+            </div>
+          </div>
 
           <div className="flex flex-col gap-8 pt-16 lg:w-[40%]">
             <div className="space-y-2">
@@ -40,7 +68,7 @@ const ProductDetails = () => {
             <button
               type="button"
               className="flex items-center justify-center gap-2 rounded-lg bg-primary p-4 font-semibold text-white"
-              onClick={() => increaseCartQty(product?.id)}
+              onClick={() => addSavedItem(product?.id)}
             >
               Add to WishList <Bookmark />
             </button>
@@ -50,7 +78,7 @@ const ProductDetails = () => {
               <p>{product?.description}</p>
             </div>
 
-            <div className="flex flex-col items-center gap-3 justify-between lg:items-stretch">
+            <div className="flex flex-col items-center justify-between gap-3 lg:items-stretch">
               <div className="flex flex-col items-center gap-3 lg:flex-row">
                 <Image
                   className="cursor-pointer rounded-full"
@@ -61,8 +89,8 @@ const ProductDetails = () => {
                 />
                 {/* <div className="size-14 rounded-full bg-red-500"></div> */}
                 <div>
-                  <h3 className="text-xl font-semibold">Akpor Raphael</h3>
-                  <p>4.7 / 5.0 rating </p>
+                  <h3 className="text-xl font-semibold">CosMo Tech </h3>
+                  <p>4.5 / 5.0 rating </p>
                 </div>
               </div>
 
@@ -93,14 +121,6 @@ const ProductDetails = () => {
           </div>
         </div>
       </section>
-
-      <ChatModal
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        productPrice={product?.price}
-        productName={product?.title}
-      />
-
       <Footer />
     </>
   );
