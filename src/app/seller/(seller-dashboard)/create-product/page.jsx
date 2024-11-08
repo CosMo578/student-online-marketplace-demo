@@ -43,7 +43,7 @@ const UploadProducts = () => {
 
       // Add product data to Firestore
       await addDoc(collection(db, "products"), {
-        sellerEmail: currentUser.uid,
+        sellerId: currentUser.uid,
         name: productName,
         price: productPrice,
         category: category,

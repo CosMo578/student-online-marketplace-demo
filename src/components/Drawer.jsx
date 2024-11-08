@@ -6,7 +6,6 @@ import {
   DialogTitle,
   TransitionChild,
 } from "@headlessui/react";
-import Link from "next/link";
 import { CartItem } from "./CartItem";
 import { XIcon } from "lucide-react";
 import { useShoppingCart } from "@/app/Context/ShoppingCartContext";

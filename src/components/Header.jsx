@@ -3,7 +3,7 @@ import Link from "next/link";
 import Drawer from "./Drawer";
 import Image from "next/image";
 import { getAuth, signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { auth, db } from "@/app/config/firebase";
 import { AuthContext } from "@/app/Context/AuthContext";
@@ -24,6 +24,8 @@ const Header = ({ value, setValue, select, setSelect }) => {
   const [accountType, setAccountType] = useState("");
   const { currentUser } = useContext(AuthContext);
   const { savedItems } = useShoppingCart();
+  const pathname = usePathname();
+
   const userId = auth?.currentUser?.uid;
 
   useEffect(() => {
@@ -182,72 +184,76 @@ const Header = ({ value, setValue, select, setSelect }) => {
           )}
         </div>
 
-        <form className="relative flex items-stretch gap-3 overflow-hidden rounded-lg border border-gray-300 bg-gray-50 pe-10">
-          <select
-            id="category"
-            className="w-[40%] cursor-pointer rounded-lg text-sm"
-            value={select}
-            onChange={(e) => setSelect(e.target.value)}
-          >
-            {[
-              { text: "all" },
-              { text: "clothes" },
-              { text: "electronics" },
-              { text: "kitchenUtensils" },
-              { text: "furniture" },
-              { text: "shoes" },
-              { text: "miscellaneous" },
-            ]?.map((option, index) => {
-              return (
-                <option
-                  key={index}
-                  value={option.text}
-                  onClick={() => setSelect(option.text)}
-                  className="uppercase"
-                >
-                  {option.text}
-                </option>
-              );
-            })}
-          </select>
-
-          <div className="w-[60%] overflow-hidden">
-            <label
-              htmlFor="default-search"
-              className="sr-only mb-2 text-sm font-medium text-gray-900"
+        {pathname == "/products" && (
+          <form className="relative flex flex-col overflow-hidden rounded-lg border border-gray-300 bg-gray-50 lg:flex-row lg:items-stretch lg:gap-3 lg:pe-10">
+            <select
+              id="category"
+              className="w-full cursor-pointer rounded-lg text-sm lg:w-[40%]"
+              value={select}
+              onChange={(e) => setSelect(e.target.value)}
             >
-              Search
-            </label>
+              {[
+                { text: "all" },
+                { text: "clothes" },
+                { text: "electronics" },
+                { text: "kitchenUtensils" },
+                { text: "furniture" },
+                { text: "shoes" },
+                { text: "miscellaneous" },
+              ]?.map((option, index) => {
+                return (
+                  <option
+                    key={index}
+                    value={option.text}
+                    onClick={() => setSelect(option.text)}
+                    className="uppercase"
+                  >
+                    {option.text == "all"
+                      ? "Filter item by category"
+                      : option.text}
+                  </option>
+                );
+              })}
+            </select>
 
-            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3">
-              <svg
-                className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
+            <div className="overflow-hidden lg:w-[60%]">
+              <label
+                htmlFor="default-search"
+                className="sr-only mb-2 text-sm font-medium text-gray-900"
               >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
-            </div>
+                Search
+              </label>
 
-            <input
-              type="search"
-              id="default-search"
-              className="block border-0 p-4 text-gray-900"
-              placeholder="Search for products by name..."
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              required
-            />
-          </div>
-        </form>
+              <div className="pointer-events-none absolute end-0 hidden items-center pe-3 lg:inset-y-0 lg:flex">
+                <svg
+                  className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+
+              <input
+                type="text"
+                id="default-search"
+                className="block border-0 p-4 text-gray-900"
+                placeholder="Search for products by name..."
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                required
+              />
+            </div>
+          </form>
+        )}
       </div>
     </nav>
   );

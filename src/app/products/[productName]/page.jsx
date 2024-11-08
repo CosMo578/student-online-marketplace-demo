@@ -27,7 +27,7 @@ const ProductDetails = () => {
         <div className="flex flex-col items-start gap-8 lg:flex-row">
           <div className="w-full lg:w-[60%]">
             <Link
-              className="mb-4 flex items-center w-fit gap-2 rounded-lg bg-primary px-4 py-2 text-white"
+              className="mb-4 flex w-fit items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white"
               href="/products"
             >
               <LucideArrowLeft />
@@ -36,7 +36,7 @@ const ProductDetails = () => {
 
             <ImageSwiper images={product?.images} />
 
-            <section className="mt-6 space-y-2">
+            <section className="mt-6 hidden space-y-2 lg:block">
               <h2 className="font-semibold lg:text-2xl">Ratings</h2>
 
               <div>
@@ -46,7 +46,7 @@ const ProductDetails = () => {
               </div>
             </section>
 
-            <div className="mt-4 flex items-center gap-4">
+            <div className="mt-4 hidden items-center lg:flex lg:gap-4">
               <h2>Purchased this product yet?</h2>
               <p className="w-fit rounded-lg bg-primary px-4 py-2 text-white">
                 Leave a rating
@@ -117,6 +117,23 @@ const ProductDetails = () => {
                 </li>
                 <li>Only pay if you&apos;re satisfied</li>
               </ul>
+            </div>
+
+            <section className="mt-6 lg:hidden space-y-2">
+              <h2 className="font-semibold lg:text-2xl">Ratings</h2>
+
+              <div>
+                {/* !TODO */}
+                {/* Fetch ratings from database */}
+                <p>There are no ratings for this product yet </p>
+              </div>
+            </section>
+
+            <div className="mt-4 lg:hidden items-center gap-2 lg:gap-4">
+              <h2>Purchased this product yet?</h2>
+              <button className="w-fit rounded-lg bg-primary px-4 py-2 text-white">
+                Leave a rating
+              </button>
             </div>
           </div>
         </div>
