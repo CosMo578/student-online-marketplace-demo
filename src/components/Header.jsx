@@ -18,20 +18,21 @@ import {
 } from "lucide-react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
-const Header = () => {
+const Header = ({ value, setValue, select, setSelect }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [accountType, setAccountType] = useState("");
   const { currentUser } = useContext(AuthContext);
-  const { savedItems, searchParams, setSearchParams } = useShoppingCart();
-  const userId = auth.currentUser.uid;
+  const { savedItems } = useShoppingCart();
+  const userId = auth?.currentUser?.uid;
 
   useEffect(() => {
     async function getUserByUid() {
       try {
-        const userId = await currentUser?.uid;
+        if (!userId) {
+          return;
+        }
         const userRef = doc(db, "users", userId);
-
         const userSnap = await getDoc(userRef);
 
         if (userSnap.exists()) {
@@ -46,7 +47,7 @@ const Header = () => {
       }
     }
     getUserByUid();
-  });
+  }, [userId]);
 
   const logout = async () => {
     try {
@@ -183,16 +184,31 @@ const Header = () => {
 
         <form className="relative flex items-stretch gap-3 overflow-hidden rounded-lg border border-gray-300 bg-gray-50 pe-10">
           <select
-            name="category"
             id="category"
             className="w-[40%] cursor-pointer rounded-lg text-sm"
+            value={select}
+            onChange={(e) => setSelect(e.target.value)}
           >
-            <option value="all">Filter by Category</option>
-            <option value="clothes">Clothes</option>
-            <option value="electronics">Electronics</option>
-            <option value="kitchenUtensils">Kitchen Utensils</option>
-            <option value="furniture">Furniture</option>
-            <option value="miscellaneous">Miscellaneous</option>
+            {[
+              { text: "all" },
+              { text: "clothes" },
+              { text: "electronics" },
+              { text: "kitchenUtensils" },
+              { text: "furniture" },
+              { text: "shoes" },
+              { text: "miscellaneous" },
+            ]?.map((option, index) => {
+              return (
+                <option
+                  key={index}
+                  value={option.text}
+                  onClick={() => setSelect(option.text)}
+                  className="uppercase"
+                >
+                  {option.text}
+                </option>
+              );
+            })}
           </select>
 
           <div className="w-[60%] overflow-hidden">
@@ -226,8 +242,8 @@ const Header = () => {
               id="default-search"
               className="block border-0 p-4 text-gray-900"
               placeholder="Search for products by name..."
-              value={searchParams}
-              onChange={(e) => setSearchParams(e.target.value)}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
               required
             />
           </div>

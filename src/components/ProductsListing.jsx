@@ -8,20 +8,20 @@ import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
 import { useEffect, useState } from "react";
 import { Bookmark } from "lucide-react";
 
-function ProductsListing() {
+function ProductsListing({ filteredProducts }) {
   const products = data;
   const [prod, setProd] = useState([]);
-  const [sortedProducts, setSortedProducts] = useState([]);
-  const { addSavedItem, searchParams } = useShoppingCart();
+  // const [sortedProducts, setSortedProducts] = useState([]);
+  const { addSavedItem } = useShoppingCart();
 
-  useEffect(() => {
-    const filteredItems = products.filter((item) => {
-      return searchParams.toLowerCase() === ""
-        ? "Not Found"
-        : item.title.toLowerCase().includes(searchParams.toLowerCase().trim());
-    });
-    setSortedProducts(filteredItems);
-  }, [searchParams, products]);
+  // useEffect(() => {
+  //   const filteredItems = products.filter((item) => {
+  //     return searchParams.toLowerCase() === ""
+  //       ? "Not Found"
+  //       : item.title.toLowerCase().includes(searchParams.toLowerCase().trim());
+  //   });
+  //   setSortedProducts(filteredItems);
+  // }, [searchParams, products]);
 
   const getProd = async () => {
     const ref = collection(db, "products");
@@ -33,7 +33,7 @@ function ProductsListing() {
 
   return (
     <div className="grid gap-5 px-5 pt-10 md:grid-cols-2 lg:grid-cols-4 lg:px-20">
-      {sortedProducts?.map((product, index) => {
+      {filteredProducts?.map((product, index) => {
         return (
           <div
             key={product?.id}

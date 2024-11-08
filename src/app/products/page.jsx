@@ -1,6 +1,5 @@
 import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import ProductsListing from "@/components/ProductsListing";
+import Wrapper from "@/components/Wrapper";
 
 const Products = () => {
   return (
@@ -14,8 +13,7 @@ const Products = () => {
         <li>Shoes</li>
         <li>Miscellaneous</li>
       </ul> */}
-      <Header />
-      <ProductsListing />
+      <Wrapper />
       <Footer />
     </>
   );

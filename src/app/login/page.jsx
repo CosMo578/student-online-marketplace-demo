@@ -36,8 +36,6 @@ const Login = () => {
       document.cookie = `token=${token}; path=/`;
 
       router.push("/products");
-
-      console.log(auth.currentUser.uid);
     } catch (error) {
       alert("Login error!! \n", error.message);
     } finally {
