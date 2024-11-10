@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 import { db, storage } from "@/app/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { AuthContext } from "@/app/Context/AuthContext";
@@ -41,9 +41,15 @@ const UploadProducts = () => {
         }),
       );
 
+      const userDocRef = doc(db, "users", currentUser.uid);
+      const userDocSnap = await getDoc(userDocRef);
+      const userData = userDocSnap.data();
+      const userName = userData?.userName;
+
       // Add product data to Firestore
       await addDoc(collection(db, "products"), {
         sellerId: currentUser.uid,
+        userName: userName,
         name: productName,
         price: productPrice,
         category: category,
@@ -71,7 +77,7 @@ const UploadProducts = () => {
     <section>
       <form
         onSubmit={handleProductCreation}
-        className="mx-auto flex lg:max-w-[60%] px-4 flex-col items-center space-y-4 pb-8 pt-20"
+        className="mx-auto flex flex-col items-center space-y-4 px-4 pb-8 pt-20 lg:max-w-[60%]"
       >
         <div className="w-full">
           <label
@@ -109,6 +115,7 @@ const UploadProducts = () => {
               className="hidden"
               onChange={handleFileChange}
               multiple
+              required
             />
           </label>
         </div>

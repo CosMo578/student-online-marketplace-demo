@@ -24,16 +24,23 @@ const Signup = () => {
     confirmPassword: "",
   };
 
+  function generateMatricPattern() {
+    const currentYear = new Date().getFullYear();
+    const sessionYear = currentYear - 2;
+    const nextYear = currentYear - 1;
+
+    return new RegExp(
+      `^M\\.(${sessionYear.toString().slice(-2)}|${nextYear.toString().slice(-2)})\\/(ND|HND)\\/(CSIT|PEG|PNGPD|EEED|ESMT|SLT|PMBS|CET|ISET|MPRE|MEC|WEOT)\\/\\d{5}$`,
+    );
+  }
+
   const schemaObject = Yup.object({
     accountType: Yup.string().required("Required"),
     userName: Yup.string()
       .max(15, "Must be 15 characters or less")
       .required("Required"),
     matNum: Yup.string()
-      .matches(
-        /^M\.\d{2}\/(ND|HND)\/[A-Z]+\/\d{5}$/,
-        "Invalid matriculation number format",
-      )
+      .matches(generateMatricPattern(), "Invalid matriculation number")
       .required("Matriculation number is required"),
     email: Yup.string().email("Invalid email address").required("Required"),
     password: Yup.string()

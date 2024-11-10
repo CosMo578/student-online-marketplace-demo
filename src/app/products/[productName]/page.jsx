@@ -1,23 +1,40 @@
 "use client";
 import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
-import data from "/data.json";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import ChatModal from "@/components/ChatModal";
 import ImageSwiper from "@/components/ImageSwiper";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bookmark, LucideArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "@/app/config/firebase";
+import { AuthContext } from "@/app/Context/AuthContext";
 
 const ProductDetails = () => {
   const searchParams = useSearchParams();
-  const [openModal, setOpenModal] = useState(false);
   const productId = searchParams.get("id");
   const { addSavedItem } = useShoppingCart();
+  const [product, setProduct] = useState();
+  const [businessLink, setBusinessLink] = useState("");
 
-  let product = data.find((product) => product.id == productId);
+  useEffect(() => {
+    const getProductData = async () => {
+      const productRef = doc(db, "products", productId);
+      const productDetails = await getDoc(productRef);
+
+      const userId = auth?.currentUser?.uid;
+      const userDocRef = doc(db, "users", userId);
+      const userDocSnap = await getDoc(userDocRef);
+      const userData = userDocSnap.data();
+      setBusinessLink(userData.businessLink);
+      console.log(userData);
+
+      setProduct(productDetails?.data());
+    };
+    getProductData();
+  }, []);
 
   return (
     <>
@@ -57,7 +74,7 @@ const ProductDetails = () => {
           <div className="flex flex-col gap-8 pt-16 lg:w-[40%]">
             <div className="space-y-2">
               <h2 className="text-xl font-semibold lg:text-2xl lg:font-bold">
-                {product?.title}
+                {product?.name}
               </h2>
 
               <p className="text-xl">
@@ -68,7 +85,7 @@ const ProductDetails = () => {
             <button
               type="button"
               className="flex items-center justify-center gap-2 rounded-lg bg-primary p-4 font-semibold text-white"
-              onClick={() => addSavedItem(product?.id)}
+              onClick={() => addSavedItem(productId)}
             >
               Add to WishList <Bookmark />
             </button>
@@ -79,7 +96,10 @@ const ProductDetails = () => {
             </div>
 
             <div className="flex flex-col items-center justify-between gap-3 lg:items-stretch">
-              <div className="flex flex-col items-center gap-3 lg:flex-row">
+              <Link
+                href={`/seller/${product?.userName}?id=${product?.sellerId}`}
+                className="flex flex-col items-center gap-3 lg:flex-row"
+              >
                 <Image
                   className="cursor-pointer rounded-full"
                   src="/user-dummy.png"
@@ -89,17 +109,19 @@ const ProductDetails = () => {
                 />
                 {/* <div className="size-14 rounded-full bg-red-500"></div> */}
                 <div>
-                  <h3 className="text-xl font-semibold">CosMo Tech </h3>
+                  <h3 className="text-xl font-semibold">{product?.userName}</h3>
                   <p>4.5 / 5.0 rating </p>
                 </div>
-              </div>
+              </Link>
 
-              <button
-                onClick={() => setOpenModal(true)}
+              <Link
+                href={businessLink}
+                target="_blank"
+                // onClick={() => setOpenModal(true)}
                 className="rounded-lg bg-primary px-4 py-2 text-center font-bold text-white"
               >
                 Contact Seller
-              </button>
+              </Link>
             </div>
 
             <div className="rounded-md bg-[#EBF2F7] px-6 py-4">
@@ -119,7 +141,7 @@ const ProductDetails = () => {
               </ul>
             </div>
 
-            <section className="mt-6 lg:hidden space-y-2">
+            <section className="mt-6 space-y-2 lg:hidden">
               <h2 className="font-semibold lg:text-2xl">Ratings</h2>
 
               <div>
@@ -129,7 +151,7 @@ const ProductDetails = () => {
               </div>
             </section>
 
-            <div className="mt-4 lg:hidden items-center gap-2 lg:gap-4">
+            <div className="mt-4 items-center gap-2 lg:hidden lg:gap-4">
               <h2>Purchased this product yet?</h2>
               <button className="w-fit rounded-lg bg-primary px-4 py-2 text-white">
                 Leave a rating
