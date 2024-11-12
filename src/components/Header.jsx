@@ -194,6 +194,7 @@ const Header = ({ value, setValue, select, setSelect }) => {
             >
               {[
                 { text: "all" },
+                { text: "courseMaterials" },
                 { text: "clothes" },
                 { text: "electronics" },
                 { text: "kitchenUtensils" },

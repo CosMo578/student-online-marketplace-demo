@@ -77,10 +77,13 @@ const ProductDetails = () => {
         productId,
         date: new Date(),
       });
+
       alert("You have successfully rated this product");
       setRating("");
       setComment("");
       setRateProduct(false);
+
+      window.location.reload();
     } catch (error) {
       alert("Error adding your rating: " + error.message);
     }

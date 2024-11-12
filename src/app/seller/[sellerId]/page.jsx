@@ -42,7 +42,7 @@ const Seller = () => {
       }
     };
     getAllSellerProducts();
-  }, []);
+  }, [userId]);
 
   return (
     <section className="px-6 py-4 lg:px-20 lg:py-10">
