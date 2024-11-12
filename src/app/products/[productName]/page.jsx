@@ -17,7 +17,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { auth, db } from "@/app/config/firebase";
+import { db } from "@/app/config/firebase";
 import { AuthContext } from "@/app/Context/AuthContext";
 
 const ProductDetails = () => {
@@ -258,16 +258,6 @@ const ProductDetails = () => {
                 <li>Only pay if you&apos;re satisfied</li>
               </ul>
             </div>
-
-            {/* <section className="mt-6 space-y-2 lg:hidden">
-              <h2 className="font-semibold lg:text-2xl">Ratings</h2>
-
-              <div>
-                !TODO
-                Fetch ratings from database
-                <p>There are no ratings for this product yet </p>
-              </div>
-            </section> */}
 
             <div className="mt-4 items-center gap-2 lg:hidden lg:gap-4">
               <h2>Purchased this product yet?</h2>

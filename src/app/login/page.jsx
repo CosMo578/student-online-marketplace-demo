@@ -69,11 +69,6 @@ const Login = () => {
       } else {
         alert("No user data found. Please contact support.");
       }
-
-      // const token = await userCredential.user.getIdToken();
-      // document.cookie = `token=${token}; path=/`;
-
-      // router.push("/products");
     } catch (error) {
       alert("Login error!! \n", error.message);
     } finally {

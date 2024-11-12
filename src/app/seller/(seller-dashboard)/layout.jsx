@@ -8,8 +8,3 @@ export default function Layout({ children }) {
     </section>
   );
 }
-
-// ${pathname == "/pastQuestions" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"}
-// ${pathname == "/home" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"}
-// ${pathname.includes("/quiz") ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"}
-// ${pathname == "/chatroom" ? "bg-primary-100 text-white" : "bg-neutral-100 text-neutral-600"}
