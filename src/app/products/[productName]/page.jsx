@@ -225,7 +225,7 @@ const ProductDetails = () => {
                 />
                 {/* <div className="size-14 rounded-full bg-red-500"></div> */}
                 <div>
-                  <h3 className="text-xl font-semibold">{product?.userName}</h3>
+                  <h3 className="text-xl text-center lg:text-left font-semibold">{product?.userName}</h3>
                   <p>4.5 / 5.0 rating </p>
                 </div>
               </Link>
