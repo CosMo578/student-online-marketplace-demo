@@ -113,7 +113,7 @@ const ProductDetails = () => {
                 productRatings.map((rating, index) => (
                   <div
                     key={index}
-                    className="w-fit min-w-[40%] space-y-2 rounded-md bg-gray-200 px-4 py-2"
+                    className="lg:w-fit min-w-[40%] space-y-2 rounded-md bg-gray-200 px-4 py-2"
                   >
                     <h2 className="space-x-4 text-xl font-semibold">
                       {rating.userName}
@@ -134,13 +134,13 @@ const ProductDetails = () => {
             </section>
 
             <div className="mt-4 flex-col lg:flex lg:w-[70%] lg:gap-4">
-              <div className="flex flex-wrap items-center justify-between max-sm:gap-4">
+              <div className="flex flex-wrap items-center justify-between gap-4">
                 <h2>Purchased this product yet?</h2>
                 <button
                   onClick={() => setRateProduct(true)}
                   className="w-fit rounded-lg bg-primary px-4 py-2 text-white"
                 >
-                  Give seller feedback
+                  Leave a rating
                 </button>
               </div>
 
@@ -257,13 +257,6 @@ const ProductDetails = () => {
                 </li>
                 <li>Only pay if you&apos;re satisfied</li>
               </ul>
-            </div>
-
-            <div className="mt-4 items-center gap-2 lg:hidden lg:gap-4">
-              <h2>Purchased this product yet?</h2>
-              <button className="w-fit rounded-lg bg-primary px-4 py-2 text-white">
-                Leave a rating
-              </button>
             </div>
           </div>
         </div>

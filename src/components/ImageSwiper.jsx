@@ -55,11 +55,11 @@ export default function ImageSwiper({ images }) {
           return (
             <SwiperSlide key={image}>
               <Image
-                className="h-auto w-full cursor-pointer rounded-lg"
+                className="w-full aspect-square h-[150px] object-cover cursor-pointer rounded-lg"
                 src={image}
                 alt='image'
-                width={600}
-                height={600}
+                width={200}
+                height={120}
               />
             </SwiperSlide>
           );

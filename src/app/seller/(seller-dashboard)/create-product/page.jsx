@@ -140,6 +140,7 @@ const UploadProducts = () => {
                 <p>{file.name}</p>
                 <button
                   className="ms-4 rounded-md bg-red-500 p-2 text-white"
+                  type='button'
                   onClick={() =>
                     setFiles(files.filter((f) => f.name !== file.name))
                   }
