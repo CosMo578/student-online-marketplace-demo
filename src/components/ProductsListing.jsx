@@ -4,7 +4,7 @@ import { Bookmark } from "lucide-react";
 
 function ProductsListing({ filteredProducts, addSavedItem }) {
   return (
-    <div className="grid gap-5 px-5 pt-10 md:grid-cols-2 items-start lg:grid-cols-4 lg:px-20">
+    <div className="grid items-start gap-5 px-5 pt-10 md:grid-cols-2 lg:grid-cols-4 lg:px-20">
       {filteredProducts?.map((product) => {
         return (
           <div
@@ -15,11 +15,11 @@ function ProductsListing({ filteredProducts, addSavedItem }) {
               href={`/products/${product?.name.replace(/\s+/g, "-").toLowerCase()}?id=${product?.id}`}
             >
               <Image
-                className="w-full object-cover"
+                className="h-[250px] w-full object-cover"
                 src={product?.images[0]}
                 alt="product image"
-                width="640"
-                height="640"
+                width="300"
+                height="300"
               />
             </Link>
 

@@ -10,6 +10,9 @@ import { useShoppingCart } from "@/app/Context/ShoppingCartContext";
 const Wrapper = () => {
   const [products, setProducts] = useState([]);
   const { addSavedItem } = useShoppingCart();
+  const [value, setValue] = useState("");
+  const [select, setSelect] = useState("all");
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,9 +25,6 @@ const Wrapper = () => {
     fetchProducts();
   }, []);
 
-  const [value, setValue] = useState("");
-  const [select, setSelect] = useState("all");
-  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     const filtered = products

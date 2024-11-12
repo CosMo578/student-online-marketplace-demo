@@ -4,6 +4,7 @@ import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 import { db, storage } from "@/app/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { AuthContext } from "@/app/Context/AuthContext";
+import { X } from "lucide-react";
 
 const UploadProducts = () => {
   const [files, setFiles] = useState([]);
@@ -29,6 +30,15 @@ const UploadProducts = () => {
 
   const handleProductCreation = async (e) => {
     e.preventDefault();
+    if (files.length < 1) {
+      alert("You must upload an image for this product");
+      return;
+    }
+
+    if (category == "") {
+      alert("select a category");
+      return;
+    }
 
     try {
       setUploading(true);
@@ -120,6 +130,27 @@ const UploadProducts = () => {
           </label>
         </div>
 
+        <div className="flex flex-wrap gap-4 py-4">
+          {files.map((file, index) => {
+            return (
+              <div
+                className="me-3 flex items-center rounded-md bg-gray-200 p-3"
+                key={index}
+              >
+                <p>{file.name}</p>
+                <button
+                  className="ms-4 rounded-md bg-red-500 p-2 text-white"
+                  onClick={() =>
+                    setFiles(files.filter((f) => f.name !== file.name))
+                  }
+                >
+                  <X />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
         <div className="flex max-w-full cursor-pointer items-stretch gap-2 [&_input]:w-1/2 [&_input]:rounded-md">
           <input
             type="text"
@@ -145,7 +176,10 @@ const UploadProducts = () => {
           onChange={(e) => setCategory(e.target.value)}
           required
         >
-          <option>Select a category</option>
+          <option value="" disabled hidden selected>
+            Select a category
+          </option>
+          <option value="courseMaterials">Course Materials</option>
           <option value="clothes">Clothes</option>
           <option value="electronics">Electronics</option>
           <option value="kitchenUtensils">Kitchen Utensils</option>

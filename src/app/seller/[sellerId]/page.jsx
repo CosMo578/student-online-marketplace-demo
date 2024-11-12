@@ -11,8 +11,7 @@ import {
 import { LucideArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
-import { Router } from "next/router";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Seller = () => {
@@ -21,6 +20,7 @@ const Seller = () => {
   const [products, setProducts] = useState([]);
   const userId = searchParams.get("id");
   const postId = params.sellerId;
+  const router = useRouter();
 
   useEffect(() => {
     const getAllSellerProducts = async () => {
@@ -36,8 +36,6 @@ const Seller = () => {
           ...doc.data(),
         }));
 
-        console.log(userId);
-        console.log(userProducts);
         setProducts(userProducts);
       } catch (error) {
         alert(error.message);
@@ -50,7 +48,7 @@ const Seller = () => {
     <section className="px-6 py-4 lg:px-20 lg:py-10">
       <button
         className="mb-4 flex w-fit items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white"
-        onClick={() => Router.back()}
+        onClick={() => router.back()}
       >
         <LucideArrowLeft />
         Back
@@ -76,25 +74,27 @@ const Seller = () => {
         <div className="grid gap-5 pt-4 md:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => {
             return (
-              <div
+              <Link
                 key={product.id}
-                className="overflow-hidden rounded-lg bg-gray-200 shadow"
+                href={`/products/${product?.name.replace(/\s+/g, "-").toLowerCase()}?id=${product?.id}`}
               >
-                <Image
-                  className="w-full object-cover"
-                  src={product?.images[0]}
-                  alt="product image"
-                  width="350"
-                  height="350"
-                />
+                <div className="overflow-hidden rounded-lg bg-gray-200 shadow-lg">
+                  <Image
+                    className="w-full object-cover"
+                    src={product?.images[0]}
+                    alt="product image"
+                    width="350"
+                    height="350"
+                  />
 
-                <div className="flex flex-col p-4 pt-5">
-                  <h2>{product.name}</h2>
-                  <p className="py-3 text-xl font-semibold">
-                    ₦ {Intl.NumberFormat().format(product?.price)}
-                  </p>
+                  <div className="flex flex-col p-4 pt-5">
+                    <h2>{product.name}</h2>
+                    <p className="py-3 text-xl font-semibold">
+                      ₦ {Intl.NumberFormat().format(product?.price)}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
